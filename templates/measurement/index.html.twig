@@ -3,35 +3,43 @@
 {% block title %}Measurement index{% endblock %}
 
 {% block body %}
-    <h1>Measurement index</h1>
+    {% if is_granted('ROLE_MEASUREMENT_INDEX') %}
+        <h1>Measurement index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Date</th>
-                <th>Celsius</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for measurement in measurements %}
-            <tr>
-                <td>{{ measurement.id }}</td>
-                <td>{{ measurement.date ? measurement.date|date('Y-m-d') : '' }}</td>
-                <td>{{ measurement.celsius }}</td>
-                <td>
-                    <a href="{{ path('app_measurement_show', {'id': measurement.id}) }}">show</a>
-                    <a href="{{ path('app_measurement_edit', {'id': measurement.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Celsius</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for measurement in measurements %}
+                <tr>
+                    <td>{{ measurement.id }}</td>
+                    <td>{{ measurement.date ? measurement.date|date('Y-m-d') : '' }}</td>
+                    <td>{{ measurement.celsius }}</td>
+                    <td>
+                        {% if is_granted('ROLE_MEASUREMENT_SHOW') %}
+                            <a href="{{ path('app_measurement_show', {'id': measurement.id}) }}">show</a>
+                        {% endif %}
+                        {% if is_granted('ROLE_MEASUREMENT_EDIT') %}
+                            <a href="{{ path('app_measurement_edit', {'id': measurement.id}) }}">edit</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('app_measurement_new') }}">Create new</a>
+        {% if is_granted('ROLE_MEASUREMENT_NEW') %}
+            <a href="{{ path('app_measurement_new') }}">Create new</a>
+        {% endif %}
+    {% endif %}
 {% endblock %}
