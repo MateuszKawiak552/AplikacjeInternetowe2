@@ -33,7 +33,6 @@ class WeatherUtil
      */
     public function getWeatherForLocation(Location $location): array
     {
-        // Używa repozytorium MeasurementRepository do znalezienia pomiarów dla lokalizacji
         return $this->measurementRepository->findByLocation($location);
     }
 
@@ -46,18 +45,15 @@ class WeatherUtil
      */
     public function getWeatherForCountryAndCity(string $countryCode, string $city): array
     {
-        // Pobiera lokalizację na podstawie kodu kraju i nazwy miasta
         $location = $this->locationRepository->findOneBy([
             'country' => $countryCode,
             'city' => $city,
         ]);
 
-        // Jeśli lokalizacja nie została znaleziona, zwraca pustą tablicę
         if (!$location) {
             return [];
         }
 
-        // Wywołuje metodę getWeatherForLocation, aby pobrać dane dla znalezionej lokalizacji
         return $this->getWeatherForLocation($location);
     }
 }

@@ -36,7 +36,6 @@ class WeatherCityLocationCommand extends Command
         $countryCode = $input->getArgument('countryCode');
         $city = $input->getArgument('city');
 
-        // Pobranie lokalizacji na podstawie kodu kraju i nazwy miasta
         $location = $this->weatherUtil->getLocationRepository()->findOneBy([
             'country' => $countryCode,
             'city' => $city,
@@ -47,10 +46,8 @@ class WeatherCityLocationCommand extends Command
             return Command::FAILURE;
         }
 
-        // Pobranie prognozy pogody dla znalezionej lokalizacji
         $measurements = $this->weatherUtil->getWeatherForLocation($location);
 
-        // Wyświetlenie wyników
         $io->writeln(sprintf('Location: %s, %s', $location->getCity(), $location->getCountry()));
 
         foreach ($measurements as $measurement) {
